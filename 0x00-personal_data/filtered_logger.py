@@ -18,6 +18,35 @@ def filter_datum(fields: List[str], redaction: str, message: str,
     return message
 
 
+PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
+
+
+def get_logger() -> logging.Logger:
+    """Create and configure a logger for user_data.
+
+    Returns:
+        logging.Logger: Configured logger object.
+    """
+    # Create a logger named "user_data"
+    logger = logging.getLogger("user_data")
+
+    # Set the logging level to INFO
+    logger.setLevel(logging.INFO)
+
+    # Create a list of PII_FIELDS for the formatter
+    formatter = list(PII_FIELDS)
+
+    # Create a StreamHandler to handle log records and set its formatter
+    stream_handler = logging.StreamHandler()
+    logger.addHandler(stream_handler)
+    stream_handler.setFormatter(RedactingFormatter(formatter))
+
+    # Avoid propagating log messages to other loggers
+    logger.propagate = False
+
+    return logger
+
+
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
     """
