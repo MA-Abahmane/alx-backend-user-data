@@ -6,10 +6,9 @@ User passwords should NEVER be stored in plain text in a database.
 """
 
 import bcrypt
-from typing import ByteString
 
 
-def hash_password(password: str) -> ByteString:
+def hash_password(password: str) -> bytes:
     """ takes in password and returns a hashed password """
     # Hash a password for the first time, with a randomly-generated salt
     hashed_pwd = bcrypt.hashpw((password.encode('UTF-8')),
