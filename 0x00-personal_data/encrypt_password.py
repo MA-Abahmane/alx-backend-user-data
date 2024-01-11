@@ -17,7 +17,7 @@ def hash_password(password: str) -> ByteString:
     return hashed_pwd
 
 
-def is_valid(hashed_password: ByteString, password: str) -> bool:
+def is_valid(hashed_password: bytes, password: str) -> bool:
     """ validate that the provided password matches the hashed password """
     # Check that an unhashed password matches one that has previously been
     # hashed
