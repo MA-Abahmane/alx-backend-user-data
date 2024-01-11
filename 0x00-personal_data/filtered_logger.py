@@ -28,6 +28,7 @@ class RedactingFormatter(logging.Formatter):
     SEPARATOR = ";"
 
     def __init__(self, fields):
+        """ Constructor """
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.flds = fields
 
@@ -35,5 +36,4 @@ class RedactingFormatter(logging.Formatter):
         """ filter values in incoming log records using filter_datum """
         record.msg = filter_datum(self.flds, self.REDACTION,
                                   record.getMessage(), self.SEPARATOR)
-
         return super(RedactingFormatter, self).format(record)
