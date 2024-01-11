@@ -6,7 +6,6 @@ A function named filter_datum that returns the log message obfuscated
 
 import re
 import logging
-from tkinter import SEPARATOR
 from typing import List
 
 
