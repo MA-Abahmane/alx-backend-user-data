@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """
-Basic auth
-DocDocDocDoc
+    Basic auth
+    DocDocDocDoc
 """
 
 import base64
