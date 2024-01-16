@@ -4,8 +4,8 @@
     class to manage the API authentication
 """
 
-from typing import List
-from flask import requests
+from typing import List, TypeVar
+from flask import request
 
 
 class Auth:
