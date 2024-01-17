@@ -5,6 +5,7 @@
 """
 
 import fnmatch
+import os
 from flask import request
 from typing import List, TypeVar
 
@@ -35,3 +36,12 @@ class Auth:
         """ current user
         """
         return None
+    
+    def session_cookie(self, request=None):
+        """ returns a cookie value from a request
+        """
+        if request:
+            sess_name = os.getenv('SESSION_NAME')
+            return request.cookies.get(sess_name)
+        return None
+
