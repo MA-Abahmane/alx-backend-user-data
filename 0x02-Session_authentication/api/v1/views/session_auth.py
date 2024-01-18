@@ -16,19 +16,19 @@ def auth_session():
       -  handle all routes for the Session authentication
     """
     email = request.form.get('email')
-    pswd = request.form.get('password')
+    password = request.form.get('password')
 
     if not email or email == '':
         return jsonify({"error": "email missing"}), 400
-    if not pswd or pswd == '':
+    if not password or password == '':
         return jsonify({"error": "password missing"}), 400
 
-    users = User.search({'email': email})
-    if not users or users.length <= 0:
+    users = User.search({"email": email})
+    if not users or len(users) <= 0:
         return jsonify({"error": "no user found for this email"}), 404
 
     for user in users:
-        if user.is_valid_password(pswd):
+        if user.is_valid_password(password):
             from api.v1.app import auth
             sess_id = auth.create_session(user.id)
             response = jsonify(user.to_json())
@@ -36,4 +36,4 @@ def auth_session():
             response.set_cookie(sess_name, sess_id)
             return response
 
-    return jsonify({ "error": "wrong password" }), 401
+    return jsonify({"error": "wrong password"}), 401
