@@ -17,7 +17,11 @@ class SessionExpAuth(SessionAuth):
     def __init__(self):
         """ Constructor
         """
-        self.session_duration = int(getenv('SESSION_DURATION', 0))
+        try:
+            value = int(getenv('SESSION_DURATION'))
+        except Exception:
+            value = 0
+        self.session_duration = value
 
     def create_session(self, user_id=None):
         """ session creation
