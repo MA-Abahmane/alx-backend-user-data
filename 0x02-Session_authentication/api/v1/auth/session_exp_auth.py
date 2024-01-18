@@ -30,7 +30,7 @@ class SessionExpAuth(SessionAuth):
         if sessionID is None:
             return None
 
-        session_dictionary = {'user_id': user_id, 'created_at': datetime.now()}
+        session_dictionary = {'user_id': user_id, 'created_at': datetime.datetime.now()}
         self.user_id_by_session_id[sessionID] = session_dictionary
 
         return sessionID
@@ -51,6 +51,6 @@ class SessionExpAuth(SessionAuth):
         create_date = user_info.get('created_at')
         allowedWIN = create_date + datetime.timedelta(
             seconds=self.session_duration)
-        if allowedWIN < datetime.now():
+        if allowedWIN < datetime.datetime.now():
             return None
         return user_info.get('user_id')
