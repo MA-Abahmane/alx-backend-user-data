@@ -123,9 +123,6 @@ class Auth:
         except (NoResultFound, InvalidRequestError):
             raise ValueError('User not found')
 
-        if user is None:
-            raise ValueError('User not found')
-    
         # update user session token
         token = _generate_uuid()
         self._db.update_user(user.id, reset_token=token)
@@ -146,4 +143,4 @@ class Auth:
         hash_pass = _hash_password(password)
         self._db.update_user(user.id,
                              hashed_password=hash_pass,
-                             reset_token=None)
+                             reset_token=None,)
