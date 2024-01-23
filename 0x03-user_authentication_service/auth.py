@@ -49,9 +49,10 @@ class Auth:
             raise ValueError(f'User {email} already exists')
 
         except NoResultFound:
-            hash_pass = _hash_password(password).decode('UTF-8')
+            pass
+        hash_pass = _hash_password(password).decode('UTF-8')
 
-            return self._db.add_user(email, hash_pass)
+        return self._db.add_user(email, hash_pass)
 
     def valid_login(self, email: str, password: str) -> bool:
         """ Validate User account
@@ -59,11 +60,12 @@ class Auth:
         # find user by email
         try:
             user = self._db.find_user_by(email=email)
-            if user:
+            if user is not None:
                 # Check if the provided password matches the hashed password
-                bcrypt.checkpw(password.encode('UTF-8'),
-                               user.hashed_password.encode('UTF-8'))
-                return True
+                pswd = password.encode('UTF-8')
+                hashed_pswd = user.hashed_password.encode('UTF-8')
+                if bcrypt.checkpw(pswd, hashed_pswd):
+                    return True
         except (NoResultFound, InvalidRequestError):
             return False
         return False

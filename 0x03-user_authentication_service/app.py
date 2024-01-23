@@ -36,13 +36,13 @@ def set_user():
 
 
 @app.route('/sessions', methods=['POST'], strict_slashes=False)
-def login():
+def login() -> str:
     """ set session login
     """
     email = request.form.get('email')
-    password = request.form.get('password')
+    pswd = request.form.get('password')
 
-    if AUTH.valid_login(email, password):
+    if AUTH.valid_login(email, pswd):
         session_id = AUTH.create_session(email)
 
         response = jsonify({"email": email, "message": "logged in"})
