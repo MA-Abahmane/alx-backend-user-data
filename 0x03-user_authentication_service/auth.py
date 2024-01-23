@@ -12,6 +12,7 @@ import logging
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
 
+from user import User
 from db import DB
 
 logging.disable(logging.WARNING)
@@ -44,12 +45,13 @@ class Auth:
         """
         # Check is user account exists, if not; create one
         try:
-            user = self._db.find_user_by(email=email)
+            self._db.find_user_by(email=email)
             raise ValueError(f'User {email} already exists')
+
         except NoResultFound:
             hash_pass = _hash_password(password).decode('UTF-8')
 
-            self._db.add_user(email, hash_pass)
+            return self._db.add_user(email, hash_pass)
 
     def valid_login(self, email: str, password: str) -> bool:
         """ Validate User account
@@ -59,8 +61,9 @@ class Auth:
             user = self._db.find_user_by(email=email)
             if user:
                 # Check if the provided password matches the hashed password
-                return bcrypt.checkpw(password.encode('UTF-8'),
-                                      user.hashed_password.encode('UTF-8'))
+                bcrypt.checkpw(password.encode('UTF-8'),
+                               user.hashed_password.encode('UTF-8'))
+                return True
         except (NoResultFound, InvalidRequestError):
             return False
         return False
@@ -73,7 +76,10 @@ class Auth:
         except (NoResultFound, InvalidRequestError):
             return None
 
-        user.session_id = _generate_uuid()
+        if user:
+            session_id = _generate_uuid()
+            self._db.update_user(user.id, session_id=session_id)
 
-        self._db._session.commit()
-        return user.session_id
+            return user.session_id
+
+        return False
