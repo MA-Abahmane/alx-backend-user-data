@@ -39,7 +39,7 @@ class Auth:
         """
         self._db = DB()
 
-    def register_user(self, email: str, password: str) -> None:
+    def register_user(self, email: str, password: str) -> User:
         """ Register user
         """
         # Check is user account exists, if not; create one
@@ -57,12 +57,13 @@ class Auth:
         # find user by email
         try:
             user = self._db.find_user_by(email=email)
+            if user:
+                # Check if the provided password matches the hashed password
+                return bcrypt.checkpw(password.encode('UTF-8'),
+                                      user.hashed_password.encode('UTF-8'))
         except (NoResultFound, InvalidRequestError):
             return False
-
-        # Check if the provided password matches the hashed password
-        return bcrypt.checkpw(password.encode('UTF-8'),
-                              user.hashed_password.encode('UTF-8'))
+        return False
 
     def create_session(self, email: str) -> str:
         """ return the session ID as a string
