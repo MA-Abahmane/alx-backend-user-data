@@ -18,29 +18,36 @@ def register_user(email: str, password: str) -> None:
     """ DocDoc
     """
 
+
 def log_in_wrong_password(email: str, password: str) -> None:
     """ DocDoc
     """
+
 
 def log_in(email: str, password: str) -> str:
     """ DocDoc
     """
 
+
 def profile_unlogged() -> None:
     """ DocDoc
     """
+
 
 def profile_logged(session_id: str) -> None:
     """ DocDoc
     """
 
+
 def log_out(session_id: str) -> None:
     """ DocDoc
     """
 
+
 def reset_password_token(email: str) -> str:
     """ DocDoc
     """
+
 
 def update_password(email: str, reset_token: str, new_password: str) -> None:
     """ DocDoc
