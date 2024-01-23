@@ -73,6 +73,7 @@ class Auth:
     def create_session(self, email: str) -> str:
         """ create a user session and return the session ID as a string
         """
+        # find user by email
         try:
             user = self._db.find_user_by(email=email)
         except (NoResultFound, InvalidRequestError):
@@ -91,7 +92,7 @@ class Auth:
         """
         if session_id is None:
             return None
-
+        # find user by session_id
         try:
             user = self._db.find_user_by(session_id=session_id)
             return user
@@ -101,24 +102,28 @@ class Auth:
     def destroy_session(self, user_id: int) -> None:
         """ updates the corresponding user’s session ID to None
         """
+        # find user by id
         try:
             user = self._db.find_user_by(user_id=user_id)
 
         except (NoResultFound, InvalidRequestError):
             return None
 
-        user.session_id = None
+        # update user session_id
+        self._db.update_user(user.id, session_id=None)
 
     def get_reset_password_token(self, email: str) -> str:
         """ Find the user corresponding to the email
         """
+        # find user by email
         try:
             user = self._db.find_user_by(email=email)
 
         except (NoResultFound, InvalidRequestError):
             raise ValueError('User not found')
 
+        # update user session token
         token = _generate_uuid()
-        user.reset_token = token
+        self._db.update_user(user.id, reset_token=token)
 
         return token
