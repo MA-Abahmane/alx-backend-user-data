@@ -85,3 +85,40 @@ class Auth:
             return user.session_id
 
         return False
+
+    def get_user_from_session_id(self, session_id: str) -> User:
+        """ returns the corresponding User or None
+        """
+        if session_id is None:
+            return None
+
+        try:
+            user = self._db.find_user_by(session_id=session_id)
+            return user
+        except (NoResultFound, InvalidRequestError):
+            return None
+
+    def destroy_session(self, user_id: int) -> None:
+        """ updates the corresponding user’s session ID to None
+        """
+        try:
+            user = self._db.find_user_by(user_id=user_id)
+
+        except (NoResultFound, InvalidRequestError):
+            return None
+
+        user.session_id = None
+
+    def get_reset_password_token(self, email: str) -> str:
+        """ Find the user corresponding to the email
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+
+        except (NoResultFound, InvalidRequestError):
+            raise ValueError('User not found')
+
+        token = _generate_uuid()
+        user.reset_token = token
+
+        return token

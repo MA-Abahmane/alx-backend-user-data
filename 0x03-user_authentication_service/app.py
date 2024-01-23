@@ -4,7 +4,7 @@
 Basic Flask app
 """
 
-from flask import Flask, abort, jsonify, request
+from flask import Flask, abort, jsonify, redirect, request
 
 from auth import Auth
 
@@ -36,7 +36,7 @@ def set_user():
 
 
 @app.route('/sessions', methods=['POST'], strict_slashes=False)
-def login() -> str:
+def login():
     """ set session login
     """
     email = request.form.get('email')
@@ -50,6 +50,33 @@ def login() -> str:
         return response
 
     abort(401)
+
+
+@app.route('/sessions', methods=['DELETE'], strict_slashes=False)
+def logout():
+    """ set session logout
+    """
+    session_id = request.cookies.get("session_id")
+
+    user = AUTH.get_user_from_session_id(session_id)
+    if user is not None:
+        AUTH.destroy_session(user.id)
+        return redirect("/")
+
+    abort(403)
+
+
+@app.route('/profile', methods=['GET'], strict_slashes=False)
+def profile():
+    """ profile existence validation
+    """
+    session_id = request.cookies.get("session_id")
+
+    user = AUTH.get_user_from_session_id(session_id)
+    if user is not None:
+        return jsonify({"email": user.email}), 200
+
+    abort(403)
 
 
 if __name__ == "__main__":
