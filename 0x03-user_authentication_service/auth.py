@@ -103,14 +103,11 @@ class Auth:
         """ updates the corresponding user’s session ID to None
         """
         # find user by id
-        try:
-            user = self._db.find_user_by(user_id=user_id)
-
-        except (NoResultFound, InvalidRequestError):
+        if user_id is None:
             return None
 
         # update user session_id
-        self._db.update_user(user.id, session_id=None)
+        self._db.update_user(user_id, session_id=None)
 
     def get_reset_password_token(self, email: str) -> str:
         """ Find the user corresponding to the email and
